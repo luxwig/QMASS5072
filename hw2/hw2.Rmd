@@ -1,0 +1,26 @@
+---
+title: "Hw2"
+author: "Ludwig Zhao"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+```
+# Setup
+```{r}
+data<-read_csv("Seasons_Stats_NBA.csv", 
+            col_types = cols(
+              Player = col_character(),
+              Pos = col_character(),
+              Tm = col_character(),
+              .default = col_double()))
+```
+# 1) Which NBA player scored the most points in 1991?
+```{r}
+data %>%
+  arrange(PTS)
+```
