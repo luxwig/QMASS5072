@@ -1,0 +1,56 @@
+---
+title: "Hw3"
+author: "Ludwig Zhao"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+```{r}
+library(nycflights13)
+library(dplyr)
+data <- flights
+```
+
+# 1. Write a function that takes a single numerical vector and returns three values, the minimum number, the median, and the maximum number of the vector.  Test your function using the month column of the flights dataset.
+
+
+```{r}
+GetMinMedianMax <- function(x) {
+  c(min(x), median(x), max(x))
+}
+
+GetMinMedianMax(data$month)
+```
+
+## 1b)  Explain your reasoning for choosing your function’s name
+
+The method (function) is use PascalCase based on C++ style (https://google.github.io/styleguide/cppguide.html#Function_Names) and begin with a verb or prefix (under this case *Get*). Since the function will return min, median and max,  based abovementioned convention, it will be *Get* follow by *Min*, *Median* and *Max*, with first letter of each word capitalized (PascalCase).
+
+# 2. Write a function that categorizes a numerical variable in the flights data into four categories: 
+
+
+```{r}
+CategorizeFlightData <- function(data, columnName){
+    dataCat <- select(data, all_of(columnName))
+    data %>%
+      mutate(
+        !!columnName  := case_when (
+         dataCat >= 500  &  dataCat <= 1159 ~ "Morning",
+         dataCat >= 1200 &  dataCat <= 1659 ~ "Afternoon",
+         dataCat >= 1700 &  dataCat <= 2059 ~ "Evening",
+         dataCat >= 2100 |  dataCat <= 459 ~ "Night"
+      )
+     )
+}
+
+CategorizeFlightData(flights, 'dep_time')
+```
+
+## 2b)  Explain your reasoning for choosing your function’s name
+
+Similar to 1b), the method (function) is use PascalCase based on C++ style (https://google.github.io/styleguide/cppguide.html#Function_Names) and begin with a verb or prefix (in this case *Categorize*). Since the function categorizes the flight data into 4 different segments, based abovementioned convention, it will be *Categorize* follow by *Flight*, *Data*, with first letter of each word capitalized (PascalCase).
