@@ -20,37 +20,59 @@ data <- flights
 
 
 ```{r}
-GetMinMedianMax <- function(x) {
+getMinMedianMax <- function(x) {
   c(min(x), median(x), max(x))
 }
 
-GetMinMedianMax(data$month)
+getMinMedianMax(data$month)
 ```
 
 ## 1b)  Explain your reasoning for choosing your function’s name
 
-The method (function) is use PascalCase based on C++ style (https://google.github.io/styleguide/cppguide.html#Function_Names) and begin with a verb or prefix (under this case *Get*). Since the function will return min, median and max,  based abovementioned convention, it will be *Get* follow by *Min*, *Median* and *Max*, with first letter of each word capitalized (PascalCase).
+The method (function) uses cascalCase and begin with a verb or prefix (in this case *get*). Since the function will return min, median and max, based on abovementioned convention, it will be *get* follow by *Min*, *Median* and *Max*, with cascalCase convention.
 
 # 2. Write a function that categorizes a numerical variable in the flights data into four categories: 
 
-
+Note the output will rewrite the data in *columnName* to the desired category
 ```{r}
-CategorizeFlightData <- function(data, columnName){
-    dataCat <- select(data, all_of(columnName))
+categorizeFlightData <- function(data, columnName){
+    dataCat <-as.name(columnName)
     data %>%
       mutate(
-        !!columnName  := case_when (
-         dataCat >= 500  &  dataCat <= 1159 ~ "Morning",
-         dataCat >= 1200 &  dataCat <= 1659 ~ "Afternoon",
-         dataCat >= 1700 &  dataCat <= 2059 ~ "Evening",
-         dataCat >= 2100 |  dataCat <= 459 ~ "Night"
+        !!dataCat  := case_when (
+         !!dataCat >= 500  &  !!dataCat <= 1159 ~ "Morning",
+         !!dataCat >= 1200 &  !!dataCat <= 1659 ~ "Afternoon",
+         !!dataCat >= 1700 &  !!dataCat <= 2059 ~ "Evening",
+         !!dataCat >= 2100 |  !!dataCat <= 459 ~ "Night"
       )
      )
 }
 
-CategorizeFlightData(flights, 'dep_time')
+
+categorizeFlightData(flights, 'dep_time')
 ```
 
 ## 2b)  Explain your reasoning for choosing your function’s name
 
-Similar to 1b), the method (function) is use PascalCase based on C++ style (https://google.github.io/styleguide/cppguide.html#Function_Names) and begin with a verb or prefix (in this case *Categorize*). Since the function categorizes the flight data into 4 different segments, based abovementioned convention, it will be *Categorize* follow by *Flight*, *Data*, with first letter of each word capitalized (PascalCase).
+Similar to 1b), the method (function) uses cascalCase  and begin with a verb or prefix (in this case *categorize*). Since the function categorizes the flight data into 4 different segments, based on abovementioned convention, it will be *categorize* follow by *Flight*, *Data*, with cascalCase convention.
+
+# 3. Write a function that calculates the median of all numeric variables in the flights dataset using a for loop.  
+
+Note that NA is stripped if the column conatins NA
+```{r}
+getMedianAllNumVar <- function(){
+  dataVars<-names(select_if(flights, is.numeric))
+  result<-data.frame(row.names = "median")
+  for (varName in dataVars){
+    result[[varName]] <- median(flights[[varName]], na.rm = TRUE)
+  }
+  result
+}
+
+getMedianAllNumVar()
+```
+
+
+## 3b)  Explain your reasoning for choosing your function’s name
+
+Similar to 1b), the method (function) uses cascalCase and begin with a verb or prefix (in this case *get*). Since the function gets median values for all numeric variables, based on abovementioned convention, it will be *get* follow by *Num* (short for numeric), *Var* (short for variables), with cascalCase convention.

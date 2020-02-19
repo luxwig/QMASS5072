@@ -385,33 +385,35 @@ library(dplyr)</code></pre>
 </div>
 <div id="write-a-function-that-takes-a-single-numerical-vector-and-returns-three-values-the-minimum-number-the-median-and-the-maximum-number-of-the-vector.-test-your-function-using-the-month-column-of-the-flights-dataset." class="section level1">
 <h1>1. Write a function that takes a single numerical vector and returns three values, the minimum number, the median, and the maximum number of the vector. Test your function using the month column of the flights dataset.</h1>
-<pre class="r"><code>GetMinMedianMax &lt;- function(x) {
+<pre class="r"><code>getMinMedianMax &lt;- function(x) {
   c(min(x), median(x), max(x))
 }
 
-GetMinMedianMax(data$month)</code></pre>
+getMinMedianMax(data$month)</code></pre>
 <pre><code>## [1]  1  7 12</code></pre>
 <div id="b-explain-your-reasoning-for-choosing-your-functions-name" class="section level2">
 <h2>1b) Explain your reasoning for choosing your function’s name</h2>
-<p>The method (function) is use PascalCase based on C++ style (<a href="https://google.github.io/styleguide/cppguide.html#Function_Names" class="uri">https://google.github.io/styleguide/cppguide.html#Function_Names</a>) and begin with a verb or prefix (under this case <em>Get</em>). Since the function will return min, median and max, based abovementioned convention, it will be <em>Get</em> follow by <em>Min</em>, <em>Median</em> and <em>Max</em>, with first letter of each word capitalized (PascalCase).</p>
+<p>The method (function) uses cascalCase and begin with a verb or prefix (in this case <em>get</em>). Since the function will return min, median and max, based on abovementioned convention, it will be <em>get</em> follow by <em>Min</em>, <em>Median</em> and <em>Max</em>, with cascalCase convention.</p>
 </div>
 </div>
 <div id="write-a-function-that-categorizes-a-numerical-variable-in-the-flights-data-into-four-categories" class="section level1">
 <h1>2. Write a function that categorizes a numerical variable in the flights data into four categories:</h1>
-<pre class="r"><code>CategorizeFlightData &lt;- function(data, columnName){
-    dataCat &lt;- select(data, all_of(columnName))
+<p>Note the output will rewrite the data in <em>columnName</em> to the desired category</p>
+<pre class="r"><code>categorizeFlightData &lt;- function(data, columnName){
+    dataCat &lt;-as.name(columnName)
     data %&gt;%
       mutate(
-        !!columnName  := case_when (
-         dataCat &gt;= 500  &amp;  dataCat &lt;= 1159 ~ &quot;Morning&quot;,
-         dataCat &gt;= 1200 &amp;  dataCat &lt;= 1659 ~ &quot;Afternoon&quot;,
-         dataCat &gt;= 1700 &amp;  dataCat &lt;= 2059 ~ &quot;Evening&quot;,
-         dataCat &gt;= 2100 |  dataCat &lt;= 459 ~ &quot;Night&quot;
+        !!dataCat  := case_when (
+         !!dataCat &gt;= 500  &amp;  !!dataCat &lt;= 1159 ~ &quot;Morning&quot;,
+         !!dataCat &gt;= 1200 &amp;  !!dataCat &lt;= 1659 ~ &quot;Afternoon&quot;,
+         !!dataCat &gt;= 1700 &amp;  !!dataCat &lt;= 2059 ~ &quot;Evening&quot;,
+         !!dataCat &gt;= 2100 |  !!dataCat &lt;= 459 ~ &quot;Night&quot;
       )
      )
 }
 
-CategorizeFlightData(flights, 'dep_time')</code></pre>
+
+categorizeFlightData(flights, 'dep_time')</code></pre>
 <pre><code>## # A tibble: 336,776 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;             &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
@@ -430,7 +432,29 @@ CategorizeFlightData(flights, 'dep_time')</code></pre>
 ## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <div id="b-explain-your-reasoning-for-choosing-your-functions-name-1" class="section level2">
 <h2>2b) Explain your reasoning for choosing your function’s name</h2>
-<p>Similar to 1b), the method (function) is use PascalCase based on C++ style (<a href="https://google.github.io/styleguide/cppguide.html#Function_Names" class="uri">https://google.github.io/styleguide/cppguide.html#Function_Names</a>) and begin with a verb or prefix (in this case <em>Categorize</em>). Since the function categorizes the flight data into 4 different segments, based abovementioned convention, it will be <em>Categorize</em> follow by <em>Flight</em>, <em>Data</em>, with first letter of each word capitalized (PascalCase).</p>
+<p>Similar to 1b), the method (function) uses cascalCase and begin with a verb or prefix (in this case <em>categorize</em>). Since the function categorizes the flight data into 4 different segments, based on abovementioned convention, it will be <em>categorize</em> follow by <em>Flight</em>, <em>Data</em>, with cascalCase convention.</p>
+</div>
+</div>
+<div id="write-a-function-that-calculates-the-median-of-all-numeric-variables-in-the-flights-dataset-using-a-for-loop." class="section level1">
+<h1>3. Write a function that calculates the median of all numeric variables in the flights dataset using a for loop.</h1>
+<p>Note that NA is stripped if the column conatins NA</p>
+<pre class="r"><code>getMedianAllNumVar &lt;- function(){
+  dataVars&lt;-names(select_if(flights, is.numeric))
+  result&lt;-data.frame(row.names = &quot;median&quot;)
+  for (varName in dataVars){
+    result[[varName]] &lt;- median(flights[[varName]], na.rm = TRUE)
+  }
+  result
+}
+
+getMedianAllNumVar()</code></pre>
+<pre><code>##        year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+## median 2013     7  16     1401           1359        -2     1535           1556
+##        arr_delay flight air_time distance hour minute
+## median        -5   1496      129      872   13     29</code></pre>
+<div id="b-explain-your-reasoning-for-choosing-your-functions-name-2" class="section level2">
+<h2>3b) Explain your reasoning for choosing your function’s name</h2>
+<p>Similar to 1b), the method (function) uses cascalCase and begin with a verb or prefix (in this case <em>get</em>). Since the function gets median values for all numeric variables, based on abovementioned convention, it will be <em>get</em> follow by <em>Num</em> (short for numeric), <em>Var</em> (short for variables), with cascalCase convention.</p>
 </div>
 </div>
 
