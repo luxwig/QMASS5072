@@ -1,0 +1,109 @@
+---
+title: "hw4"
+author: "Ludwig Zhao"
+date: "2/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+options("max.print"=10) 
+```
+
+
+# 1.Convert the data to a tibble data-frame. Use one or more functions from the Purrr package that subsets list data to subset columns in the data to three unique datasets.  The first should include columns that are factors only (i.e. - categorical data), the second should include columns that are numeric only, and the third should include columns with logical values only.  
+
+The CentralAir is converted to logical value manually as it fits the description
+
+```{r}
+data <- read.csv("Housing_prices_data.csv")
+data <- as_tibble(data)
+data$CentralAir=
+   case_when(
+        data$CentralAir == factor("Y",c("Y","N")) ~ TRUE,
+         data$CentralAir == factor("N",c("Y","N")) ~ FALSE)
+factorData <- keep(data, is.factor)
+numData <- keep(data, is.numeric)
+logicalData <- keep(data, is.logical)
+```
+Tibble data-frame
+```{r}
+data
+```
+
+First subset, factors only
+```{r}
+factorData
+```
+
+Second subset, numeric only
+```{r}
+numData
+```
+
+Third subset, logical only
+```{r}
+logicalData
+```
+
+
+# 2. Using the second dataset from question #1, calculate column means with one of the apply functions.
+
+```{r}
+lapply(numData, mean)
+```
+
+
+# 3. Using the second dataset from question #1, create a new dataset that only includes the variable indicating sales price (variable name is "SalePrice").
+
+```{r}
+salePrice <- pluck(numData, "SalePrice")
+salePrice
+```
+
+# Search for a categorical variable in the full dataset that you think may be related to the sales price of houses.
+
+The general zoning classification. (MSZoning)
+
+# Use the split function to subset this data into a list containing a single dataset for each category of your data.
+
+```{r}
+splitData <- split(salePrice, data$MSZoning)
+splitData
+```
+
+
+
+
+# Create column means for each column of the sales price variable using the colMeans function with one of the map functions on this list.  
+
+```{r}
+mSplitData <- map(splitData,as.matrix)
+map(mSplitData, colMeans)
+```
+
+# 4. Convert the full original housing dataset to a tibble data frame and then convert the tibble data frame to a list using as.list().  
+
+```{r}
+data <- read.csv("Housing_prices_data.csv")
+data <- as_tibble(data)
+data <- as.list(data)
+data
+```
+
+# Subset the list into two unique lists: 1) a new list that includes a single list element that measures the sales price of Aimes houses (variable name is "SalePrice").  2) a new list that includes a single list element that measures the building type of each home (variable name is "BldgType").
+
+```{r}
+salePrice <- list(pluck(data, "SalePrice"))
+salePrice
+
+bldgType <- list(pluck(data, "BldgType"))
+bldgType
+```
+
+# Lastly, create one more list that appends the the list with building type data to the list with sales price data.
+```{r}
+newData <- append(salePrice, bldgType)
+newData
+```
