@@ -1,0 +1,34 @@
+---
+title: "Homework 5"
+author: "Ludwig Zhao"
+date: "3/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(devtools)
+```
+
+
+# Github Repo
+Username: luxwig
+
+Repo: QMASS5072
+
+Package Location: hw5/SeasonsStatsNBA
+
+## 4. Use the Install github function to install your package in R.  
+
+```{r}
+install_github("luxwig/QMASS5072/hw5/SeasonsStatsNBA",  force = TRUE)
+```
+
+## 5. Run each of the functions to ensure that they are working correctly in R
+
+```{r}
+library(SeasonsStatsNBA)
+getMeanAge(2000)
+getOldestPlayer(2000)
+getCorr(2000)
+```
