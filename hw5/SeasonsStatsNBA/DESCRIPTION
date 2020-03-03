@@ -1,0 +1,13 @@
+Package: SeasonsStatsNBA
+Title: Homework 5 for QMSS 5072
+Version: 1.0.0.0000
+Authors@R: 
+    person(given = "Ludwig",
+           family = "Zhao",
+           email = "ludwig.zhao@columbia.edu",
+           role = c("aut", "cre"))
+Description: This is a homework set from QMSS 5072.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
